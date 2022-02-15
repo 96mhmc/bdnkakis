@@ -10,9 +10,8 @@ SHEET_NAME = "Database"
 GSHEET_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}"
 
 
-#@st.experimental_singleton()
-st.title("test")
-"""
+@st.experimental_singleton()
+
 def connect_to_gsheet():
     # Create a connection object.
     credentials = service_account.Credentials.from_service_account_info(
@@ -24,7 +23,7 @@ def connect_to_gsheet():
     gsheet_connector = service.spreadsheets()
     return gsheet_connector
 
-
+"""
 def get_data(gsheet_connector) -> pd.DataFrame:
     values = (
         gsheet_connector.values()
