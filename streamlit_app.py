@@ -52,13 +52,13 @@ def add_row_to_gsheet(gsheet_connector, row) -> None:
         .execute()
     )
 
-"""
+
 st.set_page_config(page_title="Bug report", page_icon="🐞", layout="centered")
 
 st.title("🐞 Bug report!")
 
 gsheet_connector = connect_to_gsheet()
-
+"""
 st.sidebar.write(
     f"This app shows how a Streamlit app can interact easily with a [Google Sheet]({GSHEET_URL}) to read or store data."
 )
