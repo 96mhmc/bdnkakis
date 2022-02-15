@@ -23,7 +23,7 @@ def connect_to_gsheet():
     gsheet_connector = service.spreadsheets()
     return gsheet_connector
 
-"""
+
 def get_data(gsheet_connector) -> pd.DataFrame:
     values = (
         gsheet_connector.values()
@@ -52,7 +52,7 @@ def add_row_to_gsheet(gsheet_connector, row) -> None:
         .execute()
     )
 
-
+"""
 st.set_page_config(page_title="Bug report", page_icon="🐞", layout="centered")
 
 st.title("🐞 Bug report!")
