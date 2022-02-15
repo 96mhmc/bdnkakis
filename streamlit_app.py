@@ -11,7 +11,7 @@ GSHEET_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}"
 
 
 @st.experimental_singleton()
-st.write("test")
+st.title("test")
 """
 def connect_to_gsheet():
     # Create a connection object.
