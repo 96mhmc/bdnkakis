@@ -10,7 +10,7 @@ SHEET_NAME = "Database"
 GSHEET_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}"
 
 
-@st.experimental_singleton()
+#@st.experimental_singleton()
 st.title("test")
 """
 def connect_to_gsheet():
