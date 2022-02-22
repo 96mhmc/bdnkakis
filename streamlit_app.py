@@ -54,9 +54,11 @@ def add_row_to_gsheet(gsheet_connector, row) -> None:
     )
 
 
-st.set_page_config(page_title="Bug report", page_icon="🐞", layout="centered")
+#st.set_page_config(page_title="Bug report", page_icon="🐞", layout="centered")
+st.set_page_config(page_title="Badminton Kakis", page_icon="🏸", layout="centered")
 
 st.title("🏸 Badminton Kakis")
+st.subheader("Beta Version")
 
 gsheet_connector = connect_to_gsheet()
 
@@ -72,26 +74,27 @@ form = st.form(key="annotation")
 
 with form:
     cols = st.columns((1, 1))
-#    name = cols[0].text_input("I am:")
-    player = cols[0].selectbox("I am:",["Player A","Player B", "Player C"])
+    player = cols[0].selectbox("I am:",["Mike","Hugo Boss", "Wing Gor","Super Stan","Soon"])
+    date = cols[0].date_input("Date of session played or court booked:")
     venue = cols[1].selectbox(
         "Venue of session:", ["Clementi Sports Hall", "Chinese Swimming Club", "Mt Faber SAFRA"], index=2
     )
-    cols = st.columns(2)
-    date = cols[0].date_input("Date of session played or court booked:")
+#    cols = st.columns(2)
+    
 #    bug_severity = cols[1].slider("Bug severity:", 1, 5, 2)
     courts = cols[1].selectbox("Paid for Court Booking?",["No.","Yes and attended session.", "Yes but did not attend session."])
-    cols = st.columns(2)
-    shuttles = cols[0].selectbox("Shuttlecocks Contributed",["0","1","2","3","4"])
-    hours = cols[1].selectbox("Length of Session (in hours):",["1","2"])
+#    cols = st.columns(2)
+    shuttles = cols[0].selectbox("Shuttlecocks Contributed",[0,1,2,3,4])
+    hours = cols[1].selectbox("Length of Session (in hours):",[1,2])
 
     comment = st.text_area("Remarks if any:")
     submitted = st.form_submit_button(label="Submit")
 
 
 if submitted:
+    timestmp=datetime.now(tz=None)
     add_row_to_gsheet(
-        gsheet_connector, [[player, str(date), venue, shuttles, hours, courts, comment]]
+        gsheet_connector, [[player, str(date), venue, shuttles, hours, courts, comment,str(timestmp)]]
     )
     st.success("Thanks! Your participation has been recorded.")
     st.balloons()
