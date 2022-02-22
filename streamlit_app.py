@@ -77,7 +77,7 @@ with form:
     player = cols[0].selectbox("I am:",["Mike","Hugo Boss", "Wing Gor","Super Stan","Soon"])
     date = cols[1].date_input("Date of session played or court booked:")
     venue = cols[0].selectbox(
-        "Venue of session:", ["Clementi Sports Hall", "Mt Faber SAFRA","Kim Seng CC], index=2
+        "Venue of session:", ["Clementi Sports Hall", "Mt Faber SAFRA","Kim Seng CC"], index=2
     )
 #    cols = st.columns(2)
     
