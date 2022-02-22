@@ -77,7 +77,7 @@ with form:
     player = cols[0].selectbox("I am:",["Mike","Hugo Boss", "Wing Gor","Super Stan","Soon"])
     date = cols[1].date_input("Date of session played or court booked:")
     venue = cols[0].selectbox(
-        "Venue of session:", ["Clementi Sports Hall", "Mt Faber SAFRA"], index=2
+        "Venue of session:", ["Clementi Sports Hall", "Mt Faber SAFRA","Kim Seng CC], index=2
     )
 #    cols = st.columns(2)
     
@@ -126,7 +126,7 @@ with expander:
     dict_attendance = {"Yes and attended session." : 1, "No." : 1,"Yes but did not attend session.":0}
     dict_courts={"Yes and attended session." : 1, "No." : 0,"Yes but did not attend session.":1}
     dict_recon={"Yes and attended session." : 0, "No." : 0,"Yes but did not attend session.":1}
-    dict_venue={"Clementi Sports Hall":7.4,"Mt Faber SAFRA":5.2,"Chinese Swimming Club":9}
+    dict_venue={"Clementi Sports Hall":7.4,"Mt Faber SAFRA":5.2,"Kim Seng CC":5}
 
     # Derive dataframe
     df.insert(8,'Attendance', df['PaymentnAttendance'] )
