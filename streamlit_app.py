@@ -2,6 +2,8 @@ import streamlit as st
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import pandas as pd
+from datetime import datetime
+import numpy as np
 
 SCOPE = "https://www.googleapis.com/auth/spreadsheets"
 #SPREADSHEET_ID = "1QlPTiVvfRM82snGN6LELpNkOwVI1_Mp9J9xeJe-QoaA"
@@ -28,7 +30,7 @@ def get_data(gsheet_connector) -> pd.DataFrame:
         gsheet_connector.values()
         .get(
             spreadsheetId=SPREADSHEET_ID,
-            range=f"{SHEET_NAME}!A:E",
+            range=f"{SHEET_NAME}!A:H",
         )
         .execute()
     )
@@ -44,7 +46,7 @@ def add_row_to_gsheet(gsheet_connector, row) -> None:
         gsheet_connector.values()
         .append(
             spreadsheetId=SPREADSHEET_ID,
-            range=f"{SHEET_NAME}!A:E",
+            range=f"{SHEET_NAME}!A:H",
             body=dict(values=row),
             valueInputOption="USER_ENTERED",
         )
