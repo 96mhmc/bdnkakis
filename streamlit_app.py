@@ -75,8 +75,8 @@ form = st.form(key="annotation")
 with form:
     cols = st.columns((1, 1))
     player = cols[0].selectbox("I am:",["Mike","Hugo Boss", "Wing Gor","Super Stan","Soon"])
-    date = cols[0].date_input("Date of session played or court booked:")
-    venue = cols[1].selectbox(
+    date = cols[1].date_input("Date of session played or court booked:")
+    venue = cols[0].selectbox(
         "Venue of session:", ["Clementi Sports Hall", "Chinese Swimming Club", "Mt Faber SAFRA"], index=2
     )
 #    cols = st.columns(2)
