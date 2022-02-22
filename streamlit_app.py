@@ -90,20 +90,20 @@ with form:
     comment = st.text_area("Remarks if any:")
     submitted = st.form_submit_button(label="Submit")
 
-"""    
-if submitted:
-    timestmp=datetime.now(tz=None)
-    add_row_to_gsheet(
-        gsheet_connector, [[player, str(date), venue, shuttles, hours, courts, comment,str(timestmp)]]
-    )
-    st.success("Thanks! Your participation has been recorded.")
-    st.balloons()
+#"""    
+#if submitted:
+#    timestmp=datetime.now(tz=None)
+#    add_row_to_gsheet(
+#        gsheet_connector, [[player, str(date), venue, shuttles, hours, courts, comment,str(timestmp)]]
+#    )
+#    st.success("Thanks! Your participation has been recorded.")
+#    st.balloons()
 
-expander = st.expander("See all records")
-with expander:
-    st.write(f"Open original [Google Sheet]({GSHEET_URL})")
-    st.dataframe(get_data(gsheet_connector))
-"""
+#expander = st.expander("See all records")
+#with expander:
+#    st.write(f"Open original [Google Sheet]({GSHEET_URL})")
+#    st.dataframe(get_data(gsheet_connector))
+#"""
 if submitted:
 #    st.write(datetime.now(tz=None))
     timestmp=datetime.now(tz=None)
