@@ -58,7 +58,7 @@ def add_row_to_gsheet(gsheet_connector, row) -> None:
 st.set_page_config(page_title="Badminton Kakis", page_icon="🏸", layout="centered")
 
 st.title("🏸 Badminton Kakis")
-st.subheader("Beta Version")
+st.subheader("Beta Version1")
 
 gsheet_connector = connect_to_gsheet()
 
