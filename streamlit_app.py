@@ -1,3 +1,8 @@
+from time import gmtime
+from tkinter import Y
+from pytz import timezone
+from pytz_deprecation_shim import UTC
+from sqlalchemy import true
 import streamlit as st
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
@@ -5,10 +10,10 @@ import pandas as pd
 from datetime import datetime
 import numpy as np
 
+
 SCOPE = "https://www.googleapis.com/auth/spreadsheets"
-#SPREADSHEET_ID = "1QlPTiVvfRM82snGN6LELpNkOwVI1_Mp9J9xeJe-QoaA"
 SPREADSHEET_ID="1cH3TrGx0VShMbVDlswhSqRshBdRgTq9ary-ISD-Ibzk"
-SHEET_NAME = "Database"
+SHEET_NAME = "Database2"
 GSHEET_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}"
 
 
@@ -58,120 +63,113 @@ def add_row_to_gsheet(gsheet_connector, row) -> None:
 st.set_page_config(page_title="Badminton Kakis", page_icon="🏸", layout="centered")
 
 st.title("🏸 Badminton Kakis")
-st.subheader("Beta Version1")
+st.subheader("Beta Version")
 
 gsheet_connector = connect_to_gsheet()
 
-#st.sidebar.write(
-#    f"This app shows how a Streamlit app can interact easily with a [Google Sheet]({GSHEET_URL}) to read or store data."
-#)
-
-#st.sidebar.write(
-#    f"[Read more](https://docs.streamlit.io/knowledge-base/tutorials/databases/public-gsheet) about connecting your Streamlit app to Google Sheets."
-#)
-
 form = st.form(key="annotation")
+
 
 with form:
     cols = st.columns((1, 1))
-    player = cols[0].selectbox("I am:",["Mike","Hugo Boss", "Wing Gor","Super Stan","Soon"])
-    date = cols[1].date_input("Date of session played or court booked:")
-    venue = cols[0].selectbox(
-        "Venue of session:", ["Clementi Sports Hall", "Mt Faber SAFRA","Kim Seng CC"], index=2
-    )
-#    cols = st.columns(2)
+    player_name = cols[0].selectbox("I am:",["Mike","Hugo Boss", "Wing Gor","Super Stan","Soon"])
+#    date = cols[1].date_input("Date of session played or court booked:")
+    session_name = cols[0].selectbox(
+        "Session:", ["1 Mar 2022, Chinese Swimming Club,1 hour","23 Feb 2022, Clementi Sports Hall,1 hour", "16 Feb 2022, Clementi Sports Hall, 1 hour","9 Feb 2022, Mt Faber SAFRA, 2 hour"]
+    ) #, index=2
     
 #    bug_severity = cols[1].slider("Bug severity:", 1, 5, 2)
-    courts = cols[1].selectbox("Paid for Court Booking?",["No.","Yes and attended session.", "Yes but did not attend session."])
-#    cols = st.columns(2)
-    shuttles = cols[0].selectbox("Shuttlecocks Contributed",[0,1,2,3,4])
-    hours = cols[1].selectbox("Length of Session (in hours):",[1,2])
-
+#    courts = cols[1].selectbox("Paid for Court Booking?",["No.","Yes and attended session.", "Yes but did not attend session."])
+    shuttles_contributed = cols[0].selectbox("Shuttlecocks Contributed:",[0,1,2,3,4])
+    attendance= cols[1].selectbox("Attended session:",["Yes","No"])
+    court_payment = cols[1].selectbox("Paid for court booking:",["No","Yes"])
+    
+#    hours = cols[1].selectbox("Length of Session (in hours):",[1,2])
     comment = st.text_area("Remarks if any:")
     submitted = st.form_submit_button(label="Submit")
 
-#"""    
-#if submitted:
-#    timestmp=datetime.now(tz=None)
-#    add_row_to_gsheet(
-#        gsheet_connector, [[player, str(date), venue, shuttles, hours, courts, comment,str(timestmp)]]
-#    )
-#    st.success("Thanks! Your participation has been recorded.")
-#    st.balloons()
-
-#expander = st.expander("See all records")
-#with expander:
-#    st.write(f"Open original [Google Sheet]({GSHEET_URL})")
-#    st.dataframe(get_data(gsheet_connector))
-#"""
 if submitted:
-#    st.write(datetime.now(tz=None))
-    timestmp=datetime.now(tz=None)
-    add_row_to_gsheet(
-        gsheet_connector, [[player, str(date), venue, shuttles, hours, courts, comment,str(timestmp)]]
-    )
-    st.success("Thanks! Your participation has been recorded.")
-    st.balloons()
+ #    st.write(datetime.now(tz=None))
+     timestmp=datetime.now(tz=None)
+     add_row_to_gsheet(
+         gsheet_connector, [[player_name, session_name, shuttles_contributed, attendance, court_payment, comment,str(timestmp)]]
+     )
 
-expander = st.expander("See Accounts Status")
+     st.success("Thanks! Your participation has been recorded.")
+     st.balloons()
+     st.write(session_name)
+
+ 
+expander= st.expander("See Raw Data")
 with expander:
-#    st.write(f"Open original [Google Sheet]({GSHEET_URL})")
-#    st.dataframe(get_data(gsheet_connector))
-    df=get_data(gsheet_connector)
-    #st.write(df)
-
-##START HERE
-    # Fixed Data
-    ShuttleCost=2.75
-    dict_attendance = {"Yes and attended session." : 1, "No." : 1,"Yes but did not attend session.":0}
-    dict_courts={"Yes and attended session." : 1, "No." : 0,"Yes but did not attend session.":1}
-    dict_recon={"Yes and attended session." : 0, "No." : 0,"Yes but did not attend session.":1}
-    dict_venue={"Clementi Sports Hall":7.4,"Mt Faber SAFRA":5.2,"Kim Seng CC":5}
-
-    # Derive dataframe
-    df.insert(8,'Attendance', df['PaymentnAttendance'] )
-    df['Attendance']=df['Attendance'].replace(to_replace=dict_attendance)
-    df.insert(9,'Courts', df['PaymentnAttendance'] )
-    df['Courts']=df['Courts'].replace(to_replace=dict_courts)
-    df.insert(10,'Recon1', df['PaymentnAttendance'] )
-    df['Recon1']=df['Recon1'].replace(to_replace=dict_recon)
-    df.insert(11,'VenueCost', df['Venue'] )
-    df['VenueCost']=df['VenueCost'].replace(to_replace=dict_venue)
-    df['ShuttleExpense']=pd.to_numeric(df.Shuttles)*ShuttleCost  #change df.Shuttles to float
-    df['CourtExpense']=df.Courts*pd.to_numeric(df.Hours)*df.VenueCost
-    df['Recon1']=df['Recon1']*df['CourtExpense']
-
-    # Pivot Table
-    df_Attendance=df.pivot_table(index='Date',columns='Player',values='Attendance',fill_value=0)
-    df_Shuttle=df.pivot_table(index='Date',columns='Player',values='ShuttleExpense',aggfunc=np.sum,fill_value=0)
-    df_Court=df.pivot_table(index='Date',columns='Player',values='CourtExpense',fill_value=0)
-    df_Recon1=df.pivot_table(index='Date',columns='Player',values='Recon1',fill_value=0)#*df1.pivot_table(index='Date',columns='PlayerID',values='Hours',fill_value=0)
-    
-    #st.write(df.Player)
-#    st.write(df_Attendance)
-    
-    df_Cost=df_Court+df_Shuttle
-    df_TotalCost=df_Cost.sum(axis=1)
-    df_AverageCost=df_TotalCost/df_Attendance.sum(axis=1)
-#    st.write(df_AverageCost)
-
-    # Process Pivot Table
-    df_Recon2=df_Cost.sub(df_AverageCost, axis='rows')*df_Attendance
-    df_ReconNew=df_Recon1+df_Recon2
-    df_ReconNew.sum(axis=1)
-    df_ReconNew.loc['Total']=df_ReconNew.sum(axis=0)
-    df_ReconNew['CheckSum']=df_ReconNew.sum(axis=1)
-    st.write(df_ReconNew)
-#    st.write(df_ReconNew.sum(axis=0))
- #   st.write(df_ReconNew.sum(axis=0).to_frame().T)    
-##END HERE
-
-expander2= st.expander("See Raw Data")
-with expander2:
-#    st.write(f"Open original [Google Sheet]({GSHEET_URL})")
+    #st.write(f"Open original [Google Sheet]({GSHEET_URL})")
     st.dataframe(get_data(gsheet_connector))
 
-#st.container()
-#with st.container():
-#    st.write(f"Open original [Google Sheet]({GSHEET_URL})")
-#    st.dataframe(get_data(gsheet_connector))
+
+expander2 = st.expander("See Accounts Status")
+with expander2:
+# #    st.write(f"Open original [Google Sheet]({GSHEET_URL})")
+# #    st.dataframe(get_data(gsheet_connector))
+    df=get_data(gsheet_connector)
+
+    # Fixed Data
+    shuttle_cost=2.75
+    dict_attendance = {"Yes" : 1, "No" : 0}
+    dict_venue_cost={"Clementi Sports Hall":7.4,"Mt Faber SAFRA":5.2,"Kim Seng CC":5,"Chinese Swimming Club":9}
+    dict_court_payment = {"Yes" : 1, "No" : 0}
+    csc_entrancefee=3
+#    dict_case2_venue={"Clementi Sports Hall":0,"Mt Faber SAFRA":0,"Kim Seng CC":0,"Chinese Swimming Club":1}
+#    dict_case2_player={"Mike":0,"Hugo Boss":0, "Wing Gor":0,"Super Stan":0,"Soon":1}
+
+    # Derive dataframe
+    df[['date', 'venue', 'hour']] = df['session_name'].str.split(',', expand=True)
+    df['date']=pd.to_datetime(df['date'])#,format='%d %b %y')
+    df['hour']=pd.to_numeric(df['hour'].str.rstrip('hour'))
+    #df.venue=df.venue.str.replace(' ','')
+    df['court_payment']=pd.to_numeric(df['court_payment'].replace(dict_court_payment,regex=True))
+    df['attendance']=df['attendance'].replace(dict_attendance, regex=True)  
+    df['shuttle_expense']=pd.to_numeric(df['shuttles_contributed'])*shuttle_cost
+    df['court_expense']=df['venue'].replace(dict_venue_cost,regex=True)*df['hour']*df['court_payment']
+    df['case1']=df['court_payment']-df['attendance']
+    df['case1']=df['case1'].loc[df['case1']>0]
+    df['case1']=df['case1'].fillna(0)
+#    df['case21']=df.venue.apply(lambda venue_var: 1 if venue_var==" Chinese Swimming Club" else 0)
+#    df['case22']=df.player_name.apply(lambda player_var: 1 if player_var=="Soon" else 0)
+    df["case21"]=0
+    df.loc[(df.venue==" Chinese Swimming Club") & (df.player_name=="Soon"), "case21"] = 1
+    df['case22']=0
+    df.loc[(df.venue==" Chinese Swimming Club") & (df.player_name!="Soon"), "case22"] = 1
+   
+    #st.write(df)
+
+    # Pivot Table
+    df_attendance=df.pivot_table(index='date',columns='player_name',values='attendance',fill_value=0)
+    df_shuttle=df.pivot_table(index='date',columns='player_name',values='shuttle_expense',aggfunc=np.sum,fill_value=0)
+    df_court=df.pivot_table(index='date',columns='player_name',values='court_expense',fill_value=0)
+    df_case1=df.pivot_table(index='date',columns='player_name', values='case1',fill_value=0)*df_court
+    df_case21=df.pivot_table(index='date',columns='player_name', values='case21',fill_value=0)
+    df_case22=df.pivot_table(index='date',columns='player_name', values='case22',fill_value=0)*csc_entrancefee*(-1)
+    #st.write(df_case22)
+    df_expense=df_court+df_shuttle
+    df_totalexpense=df_expense.sum(axis=1)
+    df_averageexpense=df_totalexpense/df_attendance.sum(axis=1)
+    df_csc_entrance=df_case22.sum(axis=1)
+    df_case21["Soon"]=df_case21["Soon"]*df_csc_entrance*(-1)
+    #st.dataframe(df_case21)
+    #st.dataframe(df_case22)
+
+    # Process Pivot Tables
+    df_recon=df_expense.sub(df_averageexpense, axis='rows')*df_attendance
+    df_recon=df_recon+df_case1+df_case21+df_case22
+    #df_recon.loc["total"]=df_recon[1:-1].sum(axis=1)
+    df_recon['CheckSum']=df_recon.sum(axis=1)
+    #st.dataframe(df_recon.dtype)
+    #st.write('Recon')
+    #st.write(df_recon)
+    st.dataframe(df_recon.style.format("{:.2f}"))
+    st.write("Total")
+    st.dataframe(df_recon.sum(axis=0).to_frame().T)
+    
+
+    
+
