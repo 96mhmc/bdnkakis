@@ -67,10 +67,13 @@ form = st.form(key="annotation")
 
 with form:
     cols = st.columns((1, 1))
-    player_name = cols[0].selectbox("I am:",["Mike","Hugo Boss", "Wing Gor","Super Stan","Soon"])
+    player_name = cols[0].selectbox("I am:",["Mike","Hugo Boss", "Kah Wing","Super the Man","Soon","Adrian Chuah","Alvin","Dennis","Jianwei","Kayes","Ken","Prince","Seb","Tom","WL","Francis","Guest"])
 #    date = cols[1].date_input("Date of session played or court booked:")
     session_name = cols[0].selectbox(
-        "Session:", ["1 Mar 2022, Chinese Swimming Club,1 hour","23 Feb 2022, Clementi Sports Hall,1 hour", "16 Feb 2022, Clementi Sports Hall, 1 hour","9 Feb 2022, Mt Faber SAFRA, 2 hour"]
+        "Session:", [
+        "23 Mar 2022, Clementi Sports Hall, 1 hour",
+        "17 Feb 2022, Chinese Swimming Club, 1 hour", 
+        "7 Feb 2022, Clementi Sports Hall, 1 hour"]
     ) #, index=2
     
 #    bug_severity = cols[1].slider("Bug severity:", 1, 5, 2)
@@ -92,7 +95,7 @@ if submitted:
 
      st.success("Thanks! Your participation has been recorded.")
      st.balloons()
-     st.write(session_name)
+     #st.write(session_name)
 
  
 expander= st.expander("See Raw Data")
