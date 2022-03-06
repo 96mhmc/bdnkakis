@@ -71,7 +71,8 @@ with form:
 #    date = cols[1].date_input("Date of session played or court booked:")
     session_name = cols[0].selectbox(
         "Session:", [
-        "23 Mar 2022, Clementi Sports Hall, 1 hour",
+        "3 Mar 2022, Chinese Swimming Club, 1 hour"
+        "23 Feb 2022, Clementi Sports Hall, 1 hour",
         "17 Feb 2022, Chinese Swimming Club, 1 hour", 
         "7 Feb 2022, Clementi Sports Hall, 1 hour"]
     ) #, index=2
@@ -106,8 +107,8 @@ with expander:
 
 expander2 = st.expander("See Accounts Status")
 with expander2:
-# #    st.write(f"Open original [Google Sheet]({GSHEET_URL})")
-# #    st.dataframe(get_data(gsheet_connector))
+ #    st.write(f"Open original [Google Sheet]({GSHEET_URL})")
+ #    st.dataframe(get_data(gsheet_connector))
     df=get_data(gsheet_connector)
 
     # Fixed Data
@@ -138,7 +139,6 @@ with expander2:
     df['case22']=0
     df.loc[(df.venue==" Chinese Swimming Club") & (df.player_name!="Soon"), "case22"] = 1
    
-    #st.write(df)
 
     # Pivot Table
     df_attendance=df.pivot_table(index='date',columns='player_name',values='attendance',fill_value=0)
@@ -147,14 +147,11 @@ with expander2:
     df_case1=df.pivot_table(index='date',columns='player_name', values='case1',fill_value=0)*df_court
     df_case21=df.pivot_table(index='date',columns='player_name', values='case21',fill_value=0)
     df_case22=df.pivot_table(index='date',columns='player_name', values='case22',fill_value=0)*csc_entrancefee*(-1)
-    #st.write(df_case22)
     df_expense=df_court+df_shuttle
     df_totalexpense=df_expense.sum(axis=1)
     df_averageexpense=df_totalexpense/df_attendance.sum(axis=1)
     df_csc_entrance=df_case22.sum(axis=1)
     df_case21["Soon"]=df_case21["Soon"]*df_csc_entrance*(-1)
-    #st.dataframe(df_case21)
-    #st.dataframe(df_case22)
 
     # Process Pivot Tables
     df_recon=df_expense.sub(df_averageexpense, axis='rows')*df_attendance
