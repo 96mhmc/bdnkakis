@@ -100,7 +100,7 @@ if submitted:
 
 
 
-expander= st.expander("Raw Data from 7 Feb 2022")
+expander= st.expander("Raw Data from 25 Jan 2023")
 with expander:
     st.write(f"Open original [data]({GSHEET_URL})")
     st.dataframe(get_data(gsheet_connector)[["player_name","session_name","attendance","shuttles_contributed","court_payment","comments"]])
