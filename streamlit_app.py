@@ -105,11 +105,11 @@ with expander:
     st.write(f"Open original [data]({GSHEET_URL})")
     st.dataframe(get_data(gsheet_connector)[["player_name","session_name","attendance","shuttles_contributed","court_payment","comments"]])
 
-expander3=st.expander("Accounts Carried Forward to 6 Feb 2022")
-with expander3:
-    data = {'Player': ['Adrian Chuah', 'Mike', 'WL'], 'Credit': [-1.80, -29.10, 30.90]}  
-    df=pd.DataFrame(data)
-    st.write(df)
+#expander3=st.expander("Accounts Carried Forward to 6 Feb 2022")
+#with expander3:
+#    data = {'Player': ['Adrian Chuah', 'Mike', 'WL'], 'Credit': [-1.80, -29.10, 30.90]}  
+#    df=pd.DataFrame(data)
+#    st.write(df)
 
 # expander2 = st.expander("See Accounts Status")
 # with expander2:
